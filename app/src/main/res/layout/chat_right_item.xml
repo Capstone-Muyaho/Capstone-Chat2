@@ -4,9 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#f1f4ef"
     android:paddingTop="12dp"
-
     android:paddingBottom="12dp">
 
     <TextView
@@ -22,6 +20,7 @@
         android:text="내가 보낸 메세지"
         android:textColor="#50574a"
         android:textSize="20sp"
+        android:fontFamily="@font/omnigulim_30"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -34,6 +33,7 @@
         android:text="00:00"
         android:textColor="#b9bcce"
         android:textSize="10sp"
+        android:fontFamily="@font/omnigulim_30"
         app:layout_constraintEnd_toStartOf="@+id/msg_text"
         app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

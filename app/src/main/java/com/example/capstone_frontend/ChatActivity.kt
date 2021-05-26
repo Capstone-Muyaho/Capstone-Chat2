@@ -71,7 +71,8 @@ class ChatActivity : AppCompatActivity() {
         }
 
         try {
-            mSocket = IO.socket("http://10.0.2.2:80")
+         //   mSocket = IO.socket("http://10.0.2.2:80")
+            mSocket = IO.socket("http://10.0.2.2:80/")
             Log.d("SOCKET", "Connection success : " + mSocket.id())
         } catch (e: URISyntaxException) {
             e.printStackTrace()
@@ -155,6 +156,7 @@ class ChatActivity : AppCompatActivity() {
     }
 
     private fun sendMessage() {
+        Log.d("SOCKET", "Connection success : " + mSocket.id())
         mSocket.emit(
             "newMessage", gson.toJson(
                 MessageData(
