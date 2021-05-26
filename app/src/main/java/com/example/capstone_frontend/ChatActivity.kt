@@ -22,7 +22,6 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.io.File
-import java.net.URISyntaxException
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -71,29 +70,22 @@ class ChatActivity : AppCompatActivity() {
         }
 
         try {
-         //   mSocket = IO.socket("http://10.0.2.2:80")
-            mSocket = IO.socket("http://10.0.2.2:80/")
-            Log.d("SOCKET", "Connection success : " + mSocket.id())
-        } catch (e: URISyntaxException) {
+            mSocket = IO.socket("http://10.0.2.2:80")
+            Log.d("success", mSocket.id())
+
+        } catch (e: Exception) {
             e.printStackTrace()
+            Log.d("fail", "Failed to connect")
         }
 
         mSocket.connect()
 
-        mSocket.on(Socket.EVENT_CONNECT, enter)
-        mSocket.on("update", update)
+        mSocket.on(Socket.EVENT_CONNECT) { args: Array<Any> -> mSocket.emit("enter", gson.toJson(RoomData(username, roomNumber))) }
+        mSocket.on("update") { args: Array<Any> ->
+            val data = gson.fromJson(args[0].toString(), MessageData::class.java)
+            addChat(data)
+        }
 
-    }
-
-    var enter = Emitter.Listener {
-        var data = RoomData(username, roomNumber)
-        var jsondata = gson.toJson(data)
-        mSocket.emit("enter", jsondata)
-    }
-
-    var update = Emitter.Listener {
-        val data: MessageData = gson.fromJson(it[0].toString(), MessageData::class.java)
-        addChat(data)
     }
 
     // 리사이클러뷰에 채팅 추가
