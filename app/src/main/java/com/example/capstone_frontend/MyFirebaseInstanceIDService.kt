@@ -7,6 +7,9 @@ import com.google.firebase.iid.FirebaseInstanceId
 import com.google.firebase.iid.FirebaseInstanceIdService
 import com.google.firebase.ktx.Firebase
 import com.kakao.sdk.user.UserApiClient
+import com.google.gson.Gson
+import io.socket.client.IO
+import io.socket.client.Socket
 
 class MyFirebaseInstanceIDService : FirebaseInstanceIdService() {
     /**
@@ -14,6 +17,9 @@ class MyFirebaseInstanceIDService : FirebaseInstanceIdService() {
      * the previous token had been compromised. Note that this is called when the InstanceID
      * token
      * is initially generated so this is where you would retrieve the token.  */
+    lateinit var mSocket: Socket // for socket
+    private val gson = Gson()
+
     // [START refresh_token]
     override fun onTokenRefresh() {
         // Get updated InstanceID token.
@@ -46,6 +52,7 @@ class MyFirebaseInstanceIDService : FirebaseInstanceIdService() {
             }
         }
          */
+
     }
 
     companion object {

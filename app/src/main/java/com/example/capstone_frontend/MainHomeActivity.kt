@@ -1,21 +1,36 @@
 package com.example.capstone_frontend
 
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.firebase.iid.FirebaseInstanceId
+import com.google.firebase.messaging.FirebaseMessaging
+import com.google.gson.Gson
 import com.gun0912.tedpermission.PermissionListener
 import com.gun0912.tedpermission.TedPermission
+import io.socket.client.Socket
 import kotlinx.android.synthetic.main.activity_main_home.*
+import java.io.IOException
+import io.socket.client.IO
+
 
 class MainHomeActivity : AppCompatActivity() {
+    lateinit var mSocket: Socket // for socket
+    private val gson = Gson()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main_home)
 
         setPermission()
+        getToken()
 
         val type = intent.getStringExtra("type")
         val nickName = intent.getStringExtra("nickName")
@@ -54,6 +69,15 @@ class MainHomeActivity : AppCompatActivity() {
             "FCM Message TEST",
             "REFRESHED TOKEN IS RIGHT ABOVE !!!"
         )*/
+
+            val channelId = "Dangerous situation"
+            val name = "위험 상황 탐지"
+            val importance = NotificationManager.IMPORTANCE_DEFAULT
+            val mChannel = NotificationChannel(channelId, name, importance)
+            val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.createNotificationChannel(mChannel)
+
+
     }
 
     private fun setPermission() {
@@ -76,4 +100,38 @@ class MainHomeActivity : AppCompatActivity() {
             )
             .check()
     }
+
+    private fun getToken() {
+        //val db: DatabaseReference = Firebase.database.getReference("users")
+
+        Thread(Runnable {
+            try {
+                FirebaseInstanceId.getInstance().instanceId
+                        .addOnCompleteListener(OnCompleteListener { task ->
+                            if (!task.isSuccessful) {
+                                Log.i("로그 : ", "getInstanceId failed", task.exception)
+                                return@OnCompleteListener
+                            }
+                            val token = task.result?.token.toString()
+
+                            //db.child(id).child("token").setValue(token)
+                    try {
+                        mSocket = IO.socket("http://10.0.2.2:80")
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                        Log.d("fail", "Failed to connect")
+                    }
+                    mSocket.connect()
+                    var test = "for testing"
+                    mSocket.emit("token", gson.toJson(TokenItem(token,"")))
+                    Log.d(
+                            "TOKEN", " added to server"
+                    )
+                        })
+            } catch (e: IOException) {
+                e.printStackTrace()
+            }
+        }).start()
+    }
+
 }

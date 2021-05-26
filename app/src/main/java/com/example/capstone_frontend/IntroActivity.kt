@@ -10,7 +10,9 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import com.kakao.sdk.user.UserApiClient
 
+
 class IntroActivity : AppCompatActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_intro)
@@ -21,7 +23,6 @@ class IntroActivity : AppCompatActivity() {
         UserApiClient.instance.accessTokenInfo { tokenInfo, error ->
             if (error != null) {
                 Log.e("Token", "토큰 정보 보기 실패")
-
                 handler.postDelayed({
                     val intent = Intent(applicationContext, LogInActivity::class.java)
                     startActivity(intent)
@@ -29,7 +30,6 @@ class IntroActivity : AppCompatActivity() {
                 }, 2000)
             } else if (tokenInfo != null) {
                 Log.d("Token", "토큰 정보 보기 성공")
-
                 UserApiClient.instance.me { user, error ->
                     if (error != null) {
                         Log.e("Token", "사용자 정보 요청 실패", error)

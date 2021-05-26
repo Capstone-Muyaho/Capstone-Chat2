@@ -26,9 +26,15 @@ import java.io.FileOutputStream
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
+import io.socket.client.Socket
+import io.socket.client.IO
+import com.google.gson.Gson
 
 
 class SnaptalkActivity : AppCompatActivity() {
+
+    lateinit var mSocket: Socket // for socket
+    private val gson = Gson()
 
     val REQUEST_IMAGE_CAPTURE = 1 // 카메라 사진 촬영 요청 코드
     lateinit var curPhotoPath: String // 사진 경로 값
